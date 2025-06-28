@@ -1,0 +1,681 @@
+[
+    {
+        "id": "2c517c7761fb86b7",
+        "type": "tab",
+        "label": "Flow 2",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "http1",
+        "type": "http request",
+        "z": "2c517c7761fb86b7",
+        "name": "Call Open-Meteo",
+        "method": "GET",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "https://api.open-meteo.com/v1/forecast?latitude=49.6117&longitude=6.1319&current=temperature_2m",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 210,
+        "y": 240,
+        "wires": [
+            [
+                "function1",
+                "e7d673f1ebb07286",
+                "43fb8435f4cce141"
+            ]
+        ]
+    },
+    {
+        "id": "function1",
+        "type": "function",
+        "z": "2c517c7761fb86b7",
+        "name": "Decide GPIO",
+        "func": "const temp = msg.payload.current.temperature_2m;\n\nlet gpioMsg = {\n    payload: 1\n};\n\nif (temp <= 0) {\n    gpioMsg.pin = 12;\n} else if (temp <= 15) {\n    gpioMsg.pin = 13;\n} else if (temp <= 30) {\n    gpioMsg.pin = 14;\n} else {\n    return null; // no action for >30°C\n}\n\nmsg.payload = gpioMsg.payload;\nmsg.topic = gpioMsg.pin.toString();\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 430,
+        "y": 240,
+        "wires": [
+            [
+                "switch1"
+            ]
+        ]
+    },
+    {
+        "id": "switch1",
+        "type": "switch",
+        "z": "2c517c7761fb86b7",
+        "name": "Select GPIO Pin",
+        "property": "topic",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "12",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "13",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "14",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 3,
+        "x": 680,
+        "y": 240,
+        "wires": [
+            [
+                "gpio12"
+            ],
+            [
+                "gpio13"
+            ],
+            [
+                "gpio14"
+            ]
+        ]
+    },
+    {
+        "id": "gpio12",
+        "type": "rpi-gpio out",
+        "z": "2c517c7761fb86b7",
+        "name": "GPIO 12",
+        "pin": "12",
+        "set": true,
+        "level": "0",
+        "freq": "",
+        "out": "out",
+        "bcm": true,
+        "x": 940,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "gpio13",
+        "type": "rpi-gpio out",
+        "z": "2c517c7761fb86b7",
+        "name": "GPIO 13",
+        "pin": "13",
+        "set": true,
+        "level": "0",
+        "freq": "",
+        "out": "out",
+        "bcm": true,
+        "x": 950,
+        "y": 380,
+        "wires": []
+    },
+    {
+        "id": "gpio14",
+        "type": "rpi-gpio out",
+        "z": "2c517c7761fb86b7",
+        "name": "GPIO 14",
+        "pin": "14",
+        "set": true,
+        "level": "0",
+        "freq": "",
+        "out": "out",
+        "bcm": true,
+        "x": 960,
+        "y": 440,
+        "wires": []
+    },
+    {
+        "id": "6dba94061c246085",
+        "type": "inject",
+        "z": "2c517c7761fb86b7",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "600",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "0",
+        "payloadType": "str",
+        "x": 350,
+        "y": 360,
+        "wires": [
+            [
+                "http1",
+                "gpio12",
+                "gpio13",
+                "gpio14"
+            ]
+        ]
+    },
+    {
+        "id": "e7d673f1ebb07286",
+        "type": "debug",
+        "z": "2c517c7761fb86b7",
+        "name": "debug 1",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payloadmsg.payload.current.temperature_2m",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 440,
+        "y": 300,
+        "wires": []
+    },
+    {
+        "id": "43fb8435f4cce141",
+        "type": "change",
+        "z": "2c517c7761fb86b7",
+        "name": "",
+        "rules": [
+            {
+                "t": "move",
+                "p": "payload.current.temperature_2m",
+                "pt": "msg",
+                "to": "temp",
+                "tot": "global"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 470,
+        "y": 180,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "f95e784f5aa3d1fa",
+        "type": "inject",
+        "z": "2c517c7761fb86b7",
+        "name": "Initialize & Clear LCD",
+        "props": [
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "1",
+        "topic": "",
+        "x": 220,
+        "y": 620,
+        "wires": [
+            [
+                "0b427b96d5411860"
+            ]
+        ]
+    },
+    {
+        "id": "0b427b96d5411860",
+        "type": "exec",
+        "z": "2c517c7761fb86b7",
+        "command": "python /home/ProTo/digilab/lcd/init.py",
+        "addpay": "payload",
+        "append": "",
+        "useSpawn": "false",
+        "timer": "",
+        "winHide": false,
+        "oldrc": false,
+        "name": "Run Init/Clear Script",
+        "x": 540,
+        "y": 620,
+        "wires": [
+            [
+                "40db3bafa3c32aa0"
+            ],
+            [
+                "5f72645585630c66"
+            ],
+            [
+                "0e03675b3f42c708"
+            ]
+        ]
+    },
+    {
+        "id": "7f6298b4758b5254",
+        "type": "template",
+        "z": "2c517c7761fb86b7",
+        "name": "Build Write Command",
+        "field": "payload",
+        "fieldType": "msg",
+        "format": "handlebars",
+        "syntax": "mustache",
+        "template": " --line \"{{line}}\" --message \"{{payload}}\"",
+        "output": "str",
+        "x": 620,
+        "y": 880,
+        "wires": [
+            [
+                "f493f2b7fdb691be",
+                "def046ea2b44178a"
+            ]
+        ]
+    },
+    {
+        "id": "f493f2b7fdb691be",
+        "type": "exec",
+        "z": "2c517c7761fb86b7",
+        "command": "python /home/ProTo/digilab/lcd/write.py",
+        "addpay": "payload",
+        "append": "",
+        "useSpawn": "false",
+        "timer": "",
+        "winHide": false,
+        "oldrc": false,
+        "name": "Run Write Script",
+        "x": 860,
+        "y": 900,
+        "wires": [
+            [
+                "522d98f8698518c3"
+            ],
+            [
+                "28345b2edf121e18"
+            ],
+            [
+                "047f196ae4ba47b7"
+            ]
+        ]
+    },
+    {
+        "id": "40db3bafa3c32aa0",
+        "type": "debug",
+        "z": "2c517c7761fb86b7",
+        "name": "Init stdout",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "x": 740,
+        "y": 620,
+        "wires": []
+    },
+    {
+        "id": "5f72645585630c66",
+        "type": "debug",
+        "z": "2c517c7761fb86b7",
+        "name": "Init stderr",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 740,
+        "y": 660,
+        "wires": []
+    },
+    {
+        "id": "0e03675b3f42c708",
+        "type": "debug",
+        "z": "2c517c7761fb86b7",
+        "name": "Init RC",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 730,
+        "y": 700,
+        "wires": []
+    },
+    {
+        "id": "def046ea2b44178a",
+        "type": "debug",
+        "z": "2c517c7761fb86b7",
+        "name": "Write Cmd",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1110,
+        "y": 800,
+        "wires": []
+    },
+    {
+        "id": "522d98f8698518c3",
+        "type": "debug",
+        "z": "2c517c7761fb86b7",
+        "name": "Write stdout",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "x": 1110,
+        "y": 860,
+        "wires": []
+    },
+    {
+        "id": "28345b2edf121e18",
+        "type": "debug",
+        "z": "2c517c7761fb86b7",
+        "name": "Write stderr",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "x": 1110,
+        "y": 900,
+        "wires": []
+    },
+    {
+        "id": "047f196ae4ba47b7",
+        "type": "debug",
+        "z": "2c517c7761fb86b7",
+        "name": "Write RC",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "x": 1100,
+        "y": 940,
+        "wires": []
+    },
+    {
+        "id": "fe7cbc087a3712a7",
+        "type": "inject",
+        "z": "2c517c7761fb86b7",
+        "name": "Write L2: \"Node-RED\"",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "line",
+                "v": "2",
+                "vt": "num"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "temp",
+        "payloadType": "global",
+        "x": 340,
+        "y": 900,
+        "wires": [
+            [
+                "7f6298b4758b5254"
+            ]
+        ]
+    },
+    {
+        "id": "e317c103929fb50b",
+        "type": "inject",
+        "z": "2c517c7761fb86b7",
+        "name": "Write L1: \"Hello\"",
+        "props": [
+            {
+                "p": "line",
+                "v": "1",
+                "vt": "num"
+            },
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "Bing",
+        "payloadType": "str",
+        "x": 320,
+        "y": 860,
+        "wires": [
+            [
+                "7f6298b4758b5254"
+            ]
+        ]
+    },
+    {
+        "id": "ae003ac17cdc1d63",
+        "type": "change",
+        "z": "2c517c7761fb86b7",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "line",
+                "pt": "msg",
+                "to": "2",
+                "tot": "str"
+            },
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "temp",
+                "tot": "global"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 340,
+        "y": 960,
+        "wires": [
+            [
+                "7f6298b4758b5254"
+            ]
+        ]
+    },
+    {
+        "id": "e802c290de08f434",
+        "type": "change",
+        "z": "2c517c7761fb86b7",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "line",
+                "pt": "msg",
+                "to": "1",
+                "tot": "num"
+            },
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "Temperature",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 320,
+        "y": 760,
+        "wires": [
+            [
+                "7f6298b4758b5254",
+                "1ce70c2af8e2e7af"
+            ]
+        ]
+    },
+    {
+        "id": "96d56f688b285649",
+        "type": "rpi-gpio in",
+        "z": "2c517c7761fb86b7",
+        "name": "",
+        "pin": "20",
+        "intype": "tri",
+        "debounce": "25",
+        "read": false,
+        "bcm": true,
+        "x": 270,
+        "y": 580,
+        "wires": [
+            [
+                "0b427b96d5411860"
+            ]
+        ]
+    },
+    {
+        "id": "1ce70c2af8e2e7af",
+        "type": "debug",
+        "z": "2c517c7761fb86b7",
+        "name": "debug 3",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 580,
+        "y": 740,
+        "wires": []
+    },
+    {
+        "id": "8f558328f9923151",
+        "type": "rpi-gpio in",
+        "z": "2c517c7761fb86b7",
+        "name": "",
+        "pin": "16",
+        "intype": "tri",
+        "debounce": "25",
+        "read": false,
+        "bcm": true,
+        "x": 50,
+        "y": 720,
+        "wires": [
+            [
+                "gpio12",
+                "gpio13",
+                "gpio14",
+                "b16e77229a54f40c",
+                "3c6be3bc96f7101f",
+                "47a64ec73d16b54a"
+            ]
+        ]
+    },
+    {
+        "id": "b16e77229a54f40c",
+        "type": "delay",
+        "z": "2c517c7761fb86b7",
+        "name": "",
+        "pauseType": "delay",
+        "timeout": "100",
+        "timeoutUnits": "milliseconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 170,
+        "y": 380,
+        "wires": [
+            [
+                "http1"
+            ]
+        ]
+    },
+    {
+        "id": "3c6be3bc96f7101f",
+        "type": "delay",
+        "z": "2c517c7761fb86b7",
+        "name": "",
+        "pauseType": "delay",
+        "timeout": "1",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 280,
+        "y": 700,
+        "wires": [
+            [
+                "e802c290de08f434"
+            ]
+        ]
+    },
+    {
+        "id": "47a64ec73d16b54a",
+        "type": "delay",
+        "z": "2c517c7761fb86b7",
+        "name": "",
+        "pauseType": "delay",
+        "timeout": "2",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 140,
+        "y": 1000,
+        "wires": [
+            [
+                "ae003ac17cdc1d63"
+            ]
+        ]
+    }
+]
