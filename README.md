@@ -1,5 +1,5 @@
 
-[📋 Zum Projektplaner auf GitHub](https://github.com/users/Florian-Stronck/projects/1)
+
 
 # 🌦️ Node-RED Weather Display and RGB LED Project 🎛️💡
 
@@ -27,3 +27,4 @@ Dieses Projekt nutzt **Node-RED** auf einem **Raspberry Pi** 🥧, um:
 
 - 🥧 **Raspberry Pi** (mit GPIO- und I²C-Unterstützung)  
 - ⚙️ **DigiLab**
+[📋 Zum Projektplaner auf GitHub](https://github.com/users/Florian-Stronck/projects/1)
