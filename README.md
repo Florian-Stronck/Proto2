@@ -37,5 +37,9 @@ Dieses Projekt nutzt **Node-RED** auf einem **Raspberry Pi** 🥧, um:
 - 📲 **Benachrichtigungen**: Temperaturwarnungen per E-Mail oder Telegram versenden  
 - 🗓️ **Automatische Aktualisierung**: Zeitgesteuerte Abfrage ohne Knopfdruck  
 - 🧠 **AI-Anbindung**: Wetterprognose basierend auf historischen Daten  
-- 🕹️ **Web-Interface**: Steuerung und Anzeige über eine Weboberfläche  
+- 🕹️ **Web-Interface**: Steuerung und Anzeige über eine Weboberfläche
+
+## Screenshots
+![image](https://github.com/user-attachments/assets/3edfd2b0-daa5-4b42-9f12-d9a88b55d14c)
+
 
