@@ -41,5 +41,7 @@ Dieses Projekt nutzt **Node-RED** auf einem **Raspberry Pi** 🥧, um:
 
 ## Screenshots
 ![image](https://github.com/user-attachments/assets/3edfd2b0-daa5-4b42-9f12-d9a88b55d14c)
+![image](https://github.com/user-attachments/assets/8e1b3f6c-8f8d-4991-a62d-8db418f7f2a8)
+
 
 
