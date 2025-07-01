@@ -1,22 +1,29 @@
-# Node-RED Weather Display and RGB LED Project
 
-This project uses Node-RED running on a Raspberry Pi to:
+[📋 Zum Projektplaner auf GitHub](https://github.com/users/Florian-Stronck/projects/1)
 
-- Retrieve live temperature data from a weather API
-- Display the current temperature on an LCD screen
-- Change the color of an RGB LED based on the temperature
+# 🌦️ Node-RED Weather Display and RGB LED Project 🎛️💡
 
-## Features
+Dieses Projekt nutzt **Node-RED** auf einem **Raspberry Pi** 🥧, um:
 
-- Fetches live weather data from OpenWeatherMap
-- Displays temperature on the LCD of a digi lab
-- RGB LED changes color based on temperature:
-  - Blue for temperatures below 10°C
-  - Green for temperatures between 10°C and 20°C
-  - Red for temperatures above 20°C
-- Refreshes When button is pressed
+- 🌐 Live-Temperaturdaten von einer Wetter-API abzurufen  
+- 📺 Die aktuelle Temperatur auf einem LCD anzuzeigen  
+- 🎨 Die Farbe einer RGB-LED abhängig von der Temperatur zu ändern  
 
-## Hardware Requirements
+---
 
-- Raspberry Pi (with GPIO and I²C support)
-- DigiLab
+## ✨ Features
+
+- ☁️ Holt aktuelle Wetterdaten von **OpenWeatherMap**  
+- 🖥️ Zeigt die Temperatur auf dem LCD eines DigiLab-Moduls an  
+- 💡 RGB-LED-Farbe ändert sich je nach Temperatur:
+  - 🔵 **Blau** bei Temperaturen unter 10 °C  
+  - 🟢 **Grün** bei Temperaturen zwischen 10 °C und 20 °C  
+  - 🔴 **Rot** bei Temperaturen über 20 °C  
+- 🔄 Aktualisierung durch Knopfdruck  
+
+---
+
+## 🧰 Hardware Requirements
+
+- 🥧 **Raspberry Pi** (mit GPIO- und I²C-Unterstützung)  
+- ⚙️ **DigiLab**
